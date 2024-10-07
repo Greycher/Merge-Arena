@@ -1,23 +1,58 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class Grid 
+namespace Model
 {
-    private readonly uint _rowCount;
-    private readonly uint _columnCount;
-
-    public uint RowCount => _rowCount;
-    public uint ColumnCount => _columnCount;
-    
-    public Grid(Vector3 center, uint rowCount, uint columnCount, float cellSize)
+    public class Grid 
     {
-        _rowCount = rowCount;
-        _columnCount = columnCount;
-    }
+        private readonly int _rowCount;
+        private readonly int _columnCount;
+        private readonly float _cellSize;
+        private readonly Vector3 _origin;
 
-    public Vector3 CellToWorld(Vector2Int cellPos)
-    {
-        return Vector3.zero;
+        public Grid(Vector3 origin, int rowCount, int columnCount, float cellSize)
+        {
+            if (rowCount <= 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        
+            if (columnCount <= 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        
+            _origin = origin;
+            _rowCount = rowCount;
+            _columnCount = columnCount;
+            _cellSize = cellSize;
+        }
+
+        public Vector3 CellToWorld(Vector2Int cellPos)
+        {
+            if (cellPos.x >= _rowCount)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        
+            if (cellPos.y >= _columnCount)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        
+            var midX = _rowCount / 2f - 0.5f;
+            var midY = _columnCount / 2f - 0.5f;
+            return _origin + new Vector3(cellPos.x - midX, 0, midY - cellPos.y) * _cellSize;
+        }
+
+        public void PutAnEntityToCell(Vector2Int cellPos, Entity entity)
+        {
+            
+        }
+
+        public void GetEntityAtCell(Vector2Int cellPos, Entity entity)
+        {
+            
+        }
     }
 }
